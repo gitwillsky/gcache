@@ -7,8 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/8treenet/gcache/option"
-
+	"github.com/go-redis/redis"
 	"github.com/jinzhu/gorm"
 )
 
@@ -22,9 +21,9 @@ const (
 	whereIndex        = "cache:where_index"
 )
 
-func newHandleManager(db *gorm.DB, cp *plugin, redisOption *option.RedisOption) *Handle {
+func newHandleManager(db *gorm.DB, cp *plugin) *Handle {
 	result := new(Handle)
-	result.redisClient = newRedisClient(redisOption)
+	result.redisClient = cp.option.RedisClient
 	result.db = db
 	result.cp = cp
 	result.cleaner = make(map[string]*struct {
@@ -36,7 +35,7 @@ func newHandleManager(db *gorm.DB, cp *plugin, redisOption *option.RedisOption) 
 }
 
 type Handle struct {
-	redisClient RedisClient
+	redisClient *redis.Client
 	db          *gorm.DB
 	cp          *plugin
 	cleaner     map[string]*struct {

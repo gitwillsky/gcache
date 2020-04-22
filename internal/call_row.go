@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	_ "github.com/8treenet/gcache/driver"
-	"github.com/8treenet/gcache/option"
+	_ "github.com/gitwillsky/gcache/driver"
+	"github.com/gitwillsky/gcache/option"
 	"github.com/jinzhu/gorm"
 )
 
@@ -68,7 +68,7 @@ func (c *callRow) pass(es *easyScope) bool {
 		return true
 	}
 
-	if es.opt.Level == option.LevelDisable || es.opt.Level == option.LevelModel {
+	if es.option.Level == option.LevelDisable || es.option.Level == option.LevelModel {
 		return true
 	}
 

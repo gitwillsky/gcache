@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/8treenet/gcache/option"
+	"github.com/gitwillsky/gcache/option"
 
 	"github.com/jinzhu/gorm"
 )
@@ -74,7 +74,7 @@ func (c *callQuery) pass(es *easyScope) bool {
 		return true
 	}
 
-	if es.opt.Level == option.LevelDisable {
+	if es.option.Level == option.LevelDisable {
 		return true
 	}
 
@@ -104,7 +104,7 @@ func (c *callQuery) byPrimary(es *easyScope) (ok bool, list []interface{}) {
 func (c *callQuery) bySearch(es *easyScope) (ok bool, list []interface{}) {
 	ok = false
 
-	if es.opt.Level < option.LevelSearch || len(es.condition.PrimaryValue) > 0 || (len(es.condition.ObjectField) <= 0 && len(es.joinsModels) == 0) {
+	if es.option.Level < option.LevelSearch || len(es.condition.PrimaryValue) > 0 || (len(es.condition.ObjectField) <= 0 && len(es.joinsModels) == 0) {
 		return
 	}
 	revalue := es.IndirectValue()

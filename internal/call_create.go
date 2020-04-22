@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/8treenet/gcache/option"
+	"github.com/gitwillsky/gcache/option"
 	"github.com/jinzhu/gorm"
 )
 
@@ -27,7 +27,7 @@ func (create *callCreate) Bind() {
 // beforeInvoke
 func (create *callCreate) beforeInvoke(scope *gorm.Scope) {
 	easyScope := newEasyScope(scope, create.handle)
-	if _, ok := easyScope.DB().Get(skipCache); ok || easyScope.opt.Level == option.LevelDisable {
+	if _, ok := easyScope.DB().Get(skipCache); ok || easyScope.option.Level == option.LevelDisable {
 		return
 	}
 	scope.InstanceSet("easy_scope", easyScope)
@@ -50,7 +50,7 @@ func (create *callCreate) afterInvoke(scope *gorm.Scope) {
 
 	ds := true
 	//只开启模型缓存
-	if escope.opt.Level == option.LevelModel {
+	if escope.option.Level == option.LevelModel {
 		ds = false
 	}
 
@@ -60,12 +60,12 @@ func (create *callCreate) afterInvoke(scope *gorm.Scope) {
 			delHandle.DeleteSearchByScope(escope)
 		}
 
-		if escope.opt.PenetrationSafe {
+		if escope.option.PenetrationSafe {
 			delHandle.delModle(escope.Table, escope.PrimaryKeyValue())
 		}
 	}
 
-	if escope.opt.AsyncWrite {
+	if escope.option.AsyncWrite {
 		go writeRedis(ds)
 	} else {
 		writeRedis(ds)

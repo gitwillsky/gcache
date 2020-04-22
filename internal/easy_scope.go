@@ -11,7 +11,7 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/8treenet/gcache/option"
+	"github.com/gitwillsky/gcache/option"
 
 	"github.com/jinzhu/gorm"
 )
@@ -20,8 +20,7 @@ func newEasyScope(s *gorm.Scope, h *Handle) *easyScope {
 	es := new(easyScope)
 	es.Scope = s.New(s.Value)
 	es.forgeSearch = (*search)(unsafe.Pointer(s.Search))
-	es.opt = &option.ModelOption{}
-	es.opt.Opt = h.cp.defaultOpt.Opt
+	es.option = h.cp.option
 	es.sourceScope = s
 	es.optionSetting()
 	es.Table = es.TableName()
@@ -62,7 +61,7 @@ type easyScope struct {
 		ObjectField   []string      //使用的模型列
 		PrimaryValue  []interface{} //主键查询值
 	}
-	opt            *option.ModelOption
+	option         *option.Option
 	valueType      reflect.Type
 	Table          string
 	joinsModels    []interface{}
@@ -436,14 +435,14 @@ func (es *easyScope) optionSetting() {
 
 	ccall := structValue.Addr().MethodByName("Cache")
 	if ccall.IsValid() {
-		ccall.Call([]reflect.Value{reflect.ValueOf(es.opt)})
+		ccall.Call([]reflect.Value{reflect.ValueOf(es.option)})
 	}
 
-	if es.opt.Expires < option.MinExpires {
-		es.opt.Expires = option.MinExpires
+	if es.option.Expires < option.MinExpires {
+		es.option.Expires = option.MinExpires
 	}
-	if es.opt.Expires > option.MaxExpires {
-		es.opt.Expires = option.MaxExpires
+	if es.option.Expires > option.MaxExpires {
+		es.option.Expires = option.MaxExpires
 	}
 }
 

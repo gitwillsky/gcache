@@ -1,8 +1,9 @@
 package gcache
 
 import (
-	"github.com/8treenet/gcache/internal"
-	"github.com/8treenet/gcache/option"
+	"github.com/gitwillsky/gcache/internal"
+	"github.com/gitwillsky/gcache/option"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -12,15 +13,6 @@ const (
 	LevelSearch  = option.LevelSearch
 	MinExpires   = option.MinExpires
 	MaxExpires   = option.MaxExpires
-)
-
-type (
-	// RedisOption .
-	RedisOption = option.RedisOption
-	// ModelOption .
-	ModelOption = option.ModelOption
-	// DefaultOption .
-	DefaultOption = option.DefaultOption
 )
 
 // Plugin .
@@ -45,6 +37,6 @@ type Plugin interface {
 }
 
 // AttachDB .
-func AttachDB(db *gorm.DB, opt *option.DefaultOption, redisOption *option.RedisOption) Plugin {
-	return internal.InjectGorm(db, opt, redisOption)
+func AttachDB(db *gorm.DB, opt *option.Option) Plugin {
+	return internal.InjectGorm(db, opt)
 }

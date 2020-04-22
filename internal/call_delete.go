@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"github.com/8treenet/gcache/option"
+	"github.com/gitwillsky/gcache/option"
 	"github.com/jinzhu/gorm"
 )
 
@@ -27,7 +27,7 @@ func (del *callDelete) Bind() {
 // beforeInvoke
 func (del *callDelete) beforeInvoke(scope *gorm.Scope) {
 	easyScope := newEasyScope(scope, del.handle)
-	if _, ok := easyScope.DB().Get(skipCache); ok || easyScope.opt.Level == option.LevelDisable {
+	if _, ok := easyScope.DB().Get(skipCache); ok || easyScope.option.Level == option.LevelDisable {
 		return
 	}
 	var primarys []interface{}
@@ -73,7 +73,7 @@ func (del *callDelete) afterInvoke(scope *gorm.Scope) {
 	}
 
 	ds := true
-	if escope.opt.Level == option.LevelModel {
+	if escope.option.Level == option.LevelModel {
 		ds = false
 	}
 
@@ -85,7 +85,7 @@ func (del *callDelete) afterInvoke(scope *gorm.Scope) {
 		}
 	}
 
-	if escope.opt.AsyncWrite {
+	if escope.option.AsyncWrite {
 		go writeRedis(ds)
 	} else {
 		writeRedis(ds)
